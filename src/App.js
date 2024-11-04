@@ -3,6 +3,9 @@ import './App.css';
 import React, { useEffect, useState } from "react";
 import { LoginPage } from './pages/loginPage/loginPage';
 import AuthService from './services/auth/authService';
+import {
+  Button,
+} from "@mui/material";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -15,6 +18,11 @@ function App() {
     fetchUser();
   }, []);
 
+  const handleLogout = async () => {
+    await AuthService.logout();
+    setUser(null);
+  };
+
   console.log(user);
 
   return (
@@ -24,7 +32,15 @@ function App() {
         <p>
           React Welcome
         </p>
-        <LoginPage />
+        {user ? (
+          <div>
+            <p>Witaj, {user.email}</p>
+            
+          <Button onClick={handleLogout}>Wyloguj się</Button>
+          </div>
+        ) : (
+          <LoginPage />
+        )}
       </header>
     </div>
   );
