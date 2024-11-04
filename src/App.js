@@ -15,6 +15,8 @@ function App() {
     fetchUser();
   }, []);
 
+  console.log(user);
+
   return (
     <div className="App">
       <header className="App-header">
