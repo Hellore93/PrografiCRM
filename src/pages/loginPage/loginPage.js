@@ -1,3 +1,4 @@
+// eslint-disable-line no-unused-vars
 import React, { useState } from "react";
 import AuthService from "../../services/auth/authService";
 import {
@@ -10,7 +11,7 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-export const LoginPage = () => {
+export const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -18,9 +19,9 @@ export const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { user, session } = await AuthService.login(email, password);
-      console.log("Logged in:", user, session);
+      await AuthService.login(email, password);
       setError(null); // Wyczyść błąd, jeśli istnieje
+      onLogin();
     } catch (err) {
       setError("Nie udało się zalogować: " + err.message);
     }

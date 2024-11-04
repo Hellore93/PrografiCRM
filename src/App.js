@@ -12,8 +12,7 @@ function App() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data: { user } } = await AuthService.getUser();
-      setUser(user);
+      getLoginUser();
     };
     fetchUser();
   }, []);
@@ -23,7 +22,11 @@ function App() {
     setUser(null);
   };
 
-  console.log(user);
+  const getLoginUser = async () => {
+    const { data: { user } } = await AuthService.getUser();
+    setUser(user);
+  }
+
 
   return (
     <div className="App">
@@ -35,11 +38,10 @@ function App() {
         {user ? (
           <div>
             <p>Witaj, {user.email}</p>
-            
-          <Button onClick={handleLogout}>Wyloguj się</Button>
+            <Button onClick={handleLogout}>Wyloguj się</Button>
           </div>
         ) : (
-          <LoginPage />
+          <LoginPage onLogin={getLoginUser}/>
         )}
       </header>
     </div>
