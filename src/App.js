@@ -2,10 +2,11 @@ import logo from './logo.svg';
 import './App.css';
 import React, { useEffect, useState } from "react";
 import { LoginPage } from './pages/loginPage/loginPage';
-import AuthService from './services/auth/authService';
+import AuthService from './services/authService';
 import {
   Button,
 } from "@mui/material";
+import { Home } from './pages/home/home';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -39,6 +40,7 @@ function App() {
           <div>
             <p>Witaj, {user.email}</p>
             <Button onClick={handleLogout}>Wyloguj się</Button>
+            <Home />
           </div>
         ) : (
           <LoginPage onLogin={getLoginUser}/>
