@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AuthService from "../../services/auth/authService";
 import {
   Container,
   Box,
@@ -6,18 +7,23 @@ import {
   Button,
   Typography,
   Avatar,
-  Grid,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 export const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Tutaj można obsłużyć proces logowania
-    console.log("Logging in with", username, password);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const { user, session } = await AuthService.login(email, password);
+      console.log("Logged in:", user, session);
+      setError(null); // Wyczyść błąd, jeśli istnieje
+    } catch (err) {
+      setError("Nie udało się zalogować: " + err.message);
+    }
   };
 
   return (
@@ -36,23 +42,23 @@ export const LoginPage = () => {
         <Typography component="h1" variant="h5">
           Zaloguj się
         </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          noValidate
-          sx={{ mt: 1 }}
-        >
+        {error && (
+          <Typography color="error" variant="body2">
+            {error}
+          </Typography>
+        )}
+        <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="username"
-            label="Nazwa użytkownika"
-            name="username"
-            autoComplete="username"
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
             autoFocus
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             margin="normal"
@@ -74,13 +80,6 @@ export const LoginPage = () => {
           >
             Zaloguj się
           </Button>
-          <Grid container justifyContent="center">
-            <Grid item>
-              <Typography variant="body2" color="textSecondary">
-                Nie masz konta? Zarejestruj się
-              </Typography>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>
