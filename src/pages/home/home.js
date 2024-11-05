@@ -3,32 +3,42 @@ import { ProductService } from "../../services/queryService";
 import { DataGrid } from '@mui/x-data-grid';
 
 export const Home = () => {
+    const [err, setErr] = useState(null);
     const [rows, setRows] = useState(null);
 
     useEffect(() => {
-        const products = ProductService.getAllProducts();
-        console.log('Products >> ', products);
-        setRows(products);
-      }, []);
+        getProducts();
+    }, []);
+
+    const getProducts = async () => {
+        try {
+            const products = await ProductService.getAllProducts();
+            setRows(products);
+        } catch (err) {
+            setErr(err);
+        }
+    }
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'Name', headerName: 'Name', width: 70 },
-        { field: 'Quantity', headerName: 'Quantity', width: 70 },
+        { field: 'id', headerName: 'ID', width: 50 },
+        { field: 'Name', headerName: 'Name', width: 100 },
+        { field: 'Quantity', headerName: 'Quantity', width: 0 },
     ];
 
     const paginationModel = { page: 0, pageSize: 5 };
 
     return (
         <div>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                initialState={{ pagination: { paginationModel } }}
-                pageSizeOptions={[5, 10]}
-                checkboxSelection
-                sx={{ border: 0 }}
-            />
+            {err == null &&
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    initialState={{ pagination: { paginationModel } }}
+                    pageSizeOptions={[5, 10]}
+                    checkboxSelection
+                    sx={{ border: 0 }}
+                />
+            }
         </div>
     )
 }

@@ -43,7 +43,7 @@ function App() {
             <Home />
           </div>
         ) : (
-          <LoginPage onLogin={getLoginUser}/>
+          <LoginPage onLogin={getLoginUser} />
         )}
       </header>
     </div>
