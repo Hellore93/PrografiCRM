@@ -7,6 +7,7 @@ import AuthService from './services/authService';
 import { Box } from "@mui/material";
 import { Home } from './pages/home/home';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { Products } from './pages/products/products';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -52,7 +53,9 @@ function App() {
               <Route
                 path="/PrografiCRM"
                 element={<ProtectedRoute> <Home onLogout={handleLogout} /> </ProtectedRoute>}
-              />
+              >
+                <Route path="products" element={<Products />} />
+              </Route>
               <Route
                 path="/"
                 element={<Navigate to={user ? "/PrografiCRM" : "/login"} replace />} />
