@@ -1,4 +1,3 @@
-// eslint-disable-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import { ProductService } from "../../services/queryService";
 import { AutocompleteCust } from "../../elements/autocomplete";

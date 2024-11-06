@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import './App.css';
 import React, { useEffect, useState } from "react";
 import { LoginPage } from './pages/loginPage/loginPage';
