@@ -1,5 +1,6 @@
 // eslint-disable-line no-unused-vars
 import React, { useState } from "react";
+import PropTypes from "prop-types"; 
 import AuthService from "../../services/authService";
 import {
   Container,
@@ -20,7 +21,7 @@ export const LoginPage = ({ onLogin }) => {
     e.preventDefault();
     try {
       await AuthService.login(email, password);
-      setError(null); // Wyczyść błąd, jeśli istnieje
+      setError(null);
       onLogin();
     } catch (err) {
       setError("Nie udało się zalogować: " + err.message);
@@ -85,4 +86,8 @@ export const LoginPage = ({ onLogin }) => {
       </Box>
     </Container>
   );
+};
+
+LoginPage.propTypes = {
+  onLogin: PropTypes.func.isRequired,
 };

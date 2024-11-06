@@ -1,19 +1,28 @@
-import logo from './logo.svg';
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import './App.css';
 import React, { useEffect, useState } from "react";
 import { LoginPage } from './pages/loginPage/loginPage';
 import AuthService from './services/authService';
-import {
-  Button,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import { Home } from './pages/home/home';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
-      getLoginUser();
+      try {
+        const { data: { user } } = await AuthService.getUser();
+        setUser(user);
+      } catch (err) {
+        console.log("User not logged in:", err);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchUser();
   }, []);
@@ -23,30 +32,35 @@ function App() {
     setUser(null);
   };
 
-  const getLoginUser = async () => {
-    const { data: { user } } = await AuthService.getUser();
-    setUser(user);
-  }
+  const ProtectedRoute = ({ children }) => {
+    if (loading) return null;
+    return user ? children : <Navigate to="/login" replace />;
+  };
 
+  if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          React Welcome
-        </p>
-        {user ? (
-          <div>
-            <p>Witaj, {user.email}</p>
-            <Button onClick={handleLogout}>Wyloguj się</Button>
-            <Home />
-          </div>
-        ) : (
-          <LoginPage onLogin={getLoginUser} />
-        )}
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <Box sx={{ padding: 2 }}>
+            <Routes>
+              <Route
+                path="/login"
+                element={user ? <Navigate to="/PrografiCRM" replace /> : <LoginPage onLogin={() => setUser(true)} />}
+              />
+              <Route
+                path="/PrografiCRM"
+                element={<ProtectedRoute> <Home onLogout={handleLogout} /> </ProtectedRoute>}
+              />
+              <Route
+                path="/"
+                element={<Navigate to={user ? "/PrografiCRM" : "/login"} replace />} />
+            </Routes>
+          </Box>
+        </header>
+      </div>
+    </Router>
   );
 }
 
