@@ -3,11 +3,13 @@ import { ProductService } from "../../services/queryService";
 import { AutocompleteCust } from "../../elements/autocomplete";
 import { Datatable } from "../../elements/datatable";
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import './home.css';
 
-export const Home = () => {
+export const Home = ({onLogout}) => {
     const [err, setErr] = useState(null);
     const [rows, setRows] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getProducts();
@@ -32,17 +34,21 @@ export const Home = () => {
 
     const paginationModel = { page: 0, pageSize: 5 };
 
+    const handleLogout = () => {
+        onLogout();
+        navigate('/login');
+    };
+
     return (
         <div>
-            {/* AppBar dostępny na każdej podstronie w Home */}
-            <AppBar position="static">
+            <AppBar position="static" className="App-bar">
                 <Toolbar>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         Prografi CRM
                     </Typography>
                     <Button color="inherit" component={Link} to="/PrografiCRM">Home</Button>
                     <Button color="inherit" component={Link} to="/PrografiCRM/products">Products</Button>
-                    <Button color="inherit" component={Link} to="/PrografiCRM/contact">Contact</Button>
+                    <Button color="inherit" onClick={handleLogout}>Lagout</Button>
                 </Toolbar>
             </AppBar>
             <Box sx={{ padding: 3 }}>

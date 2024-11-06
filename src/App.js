@@ -2,7 +2,7 @@ import './App.css';
 import React, { useEffect, useState } from "react";
 import { LoginPage } from './pages/loginPage/loginPage';
 import AuthService from './services/authService';
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { Home } from './pages/home/home';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { Products } from './pages/products/products';
@@ -13,6 +13,7 @@ function App() {
 
   useEffect(() => {
     const fetchUser = async () => {
+      setLoading(true);
       try {
         const { data: { user } } = await AuthService.getUser();
         setUser(user);
@@ -27,8 +28,10 @@ function App() {
   }, []);
 
   const handleLogout = async () => {
+    setLoading(true);
     await AuthService.logout();
     setUser(null);
+    setLoading(false);
   };
 
   const ProtectedRoute = ({ children }) => {
@@ -36,13 +39,13 @@ function App() {
     return user ? children : <Navigate to="/login" replace />;
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <CircularProgress size="3rem" />;
 
   return (
     <Router>
       <div className="App">
         <header className="App-header">
-          <Box sx={{ padding: 2 }}>
+          <Box>
             <Routes>
               <Route
                 path="/login"
