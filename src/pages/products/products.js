@@ -1,10 +1,69 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { ProductService } from "../../services/queryService";
+import { AutocompleteCust } from "../../elements/autocomplete";
+import { Datatable } from "../../elements/datatable";
+import { Button } from '@mui/material';
+import { ModalCust } from "../../elements/modal";
 
 export const Products = () => {
+    const [err, setErr] = useState(null);
+    const [rows, setRows] = useState(null);
+    const [openModal, setOpenModal] = useState(false);
+
+    useEffect(() => {
+        getProducts();
+    }, []);
+
+    const getProducts = async () => {
+        try {
+            const products = await ProductService.getAllProducts();
+            setRows(products);
+        } catch (err) {
+            setErr(err);
+        }
+    };
+
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 50 },
+        { field: 'Name', headerName: 'Name', width: 100 },
+        { field: 'Quantity', headerName: 'Quantity', width: 0 },
+    ];
+
+    const options = ['test 1', 'test 2'];
+
+    const paginationModel = { page: 0, pageSize: 5 };
+
+    const handleAddProduct = () => {
+        console.log('kliknieto');
+        setOpenModal(true);
+    }
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    }
+
     return (
         <div>
-            <h2>About Page</h2>
-            <p>This is the About page content.</p>
+            <div>
+                <Button variant="contained" onClick={handleAddProduct}>Add Product</Button>
+            </div>
+            {err == null && rows && (
+                <Datatable
+                    rows={rows}
+                    columns={columns}
+                    checkboxSelection={true}
+                    paginationModel={paginationModel}
+                    pageSizeOptions={[5, 10]}
+                />
+            )}
+            <AutocompleteCust
+                label="Test"
+                initialOptions={options}
+                allowAddNew={true}
+                width={200}
+            />
+
+            <ModalCust isOpen={openModal} closeEvent={handleCloseModal}/>
         </div>
     );
 };
