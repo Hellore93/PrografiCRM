@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/PrografiCRM/static/css/main.75695d06.css",
-    "main.js": "/PrografiCRM/static/js/main.5f548eb2.js",
+    "main.js": "/PrografiCRM/static/js/main.23648411.js",
     "static/js/952.6e363d89.chunk.js": "/PrografiCRM/static/js/952.6e363d89.chunk.js",
     "static/js/453.bda10e1b.chunk.js": "/PrografiCRM/static/js/453.bda10e1b.chunk.js",
     "index.html": "/PrografiCRM/index.html",
     "main.75695d06.css.map": "/PrografiCRM/static/css/main.75695d06.css.map",
-    "main.5f548eb2.js.map": "/PrografiCRM/static/js/main.5f548eb2.js.map",
+    "main.23648411.js.map": "/PrografiCRM/static/js/main.23648411.js.map",
     "952.6e363d89.chunk.js.map": "/PrografiCRM/static/js/952.6e363d89.chunk.js.map",
     "453.bda10e1b.chunk.js.map": "/PrografiCRM/static/js/453.bda10e1b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.75695d06.css",
-    "static/js/main.5f548eb2.js"
+    "static/js/main.23648411.js"
   ]
 }
