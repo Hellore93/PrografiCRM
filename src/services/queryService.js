@@ -13,4 +13,12 @@ export const ProductService = {
 
     return data;
   },
+
+  insertProduct: async (record) => {
+    await Supabase
+      .from('Product')
+      .insert([
+        record,
+      ]);
+  }
 }

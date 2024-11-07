@@ -3,9 +3,12 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { TextField } from '@mui/material';
+import { ProductService } from "../services/queryService";
 
 export const ModalCust = ({ isOpen, closeEvent, fields }) => {
     const [open, setOpen] = useState(isOpen);
+    const [object, setObject] = useState({});
 
     useEffect(() => {
         setOpen(isOpen);
@@ -28,6 +31,16 @@ export const ModalCust = ({ isOpen, closeEvent, fields }) => {
         closeEvent();
     }
 
+    const handleAddRecord = async () => {
+        await ProductService.insertProduct(object);
+    }
+
+    const handleInputChange = (e) => {
+        const obj = object;
+        obj[e.id] = e.value;
+        setObject(obj);
+    }
+
     return (
         <div>
             <Modal
@@ -41,8 +54,10 @@ export const ModalCust = ({ isOpen, closeEvent, fields }) => {
                         New record
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                        <TextField id="Name" type="text" onChange={(e) => handleInputChange(e.target)} label="Name" />
+                        <TextField id="Quantity" type="text" onChange={(e) => handleInputChange(e.target)} label="Quantity" />
                     </Typography>
+                    <Button variant="contained" onClick={handleAddRecord}>Add Record</Button>
                 </Box>
             </Modal>
         </div>

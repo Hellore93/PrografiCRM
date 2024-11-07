@@ -34,7 +34,6 @@ export const Products = () => {
     const paginationModel = { page: 0, pageSize: 5 };
 
     const handleAddProduct = () => {
-        console.log('kliknieto');
         setOpenModal(true);
     }
 
