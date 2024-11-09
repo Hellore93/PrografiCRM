@@ -2,10 +2,11 @@ import './App.css';
 import React, { useEffect, useState } from "react";
 import { LoginPage } from './pages/loginPage/loginPage';
 import AuthService from './services/authService';
-import { Box, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import { Home } from './pages/home/home';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { Products } from './pages/products/products';
+import { Spinner } from './elements/spinner';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -39,11 +40,12 @@ function App() {
     return user ? children : <Navigate to="/login" replace />;
   };
 
-  if (loading) return <CircularProgress size="3rem" />;
-
   return (
     <Router>
       <div className="App">
+        {loading && (
+          <Spinner />
+        )}
         <header className="App-header">
           <Box>
             <Routes>

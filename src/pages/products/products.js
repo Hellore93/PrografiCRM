@@ -4,11 +4,13 @@ import { AutocompleteCust } from "../../elements/autocomplete";
 import { Datatable } from "../../elements/datatable";
 import { Button } from '@mui/material';
 import { ModalCust } from "../../elements/modal";
+import { Spinner } from "../../elements/spinner";
 
 export const Products = () => {
     const [err, setErr] = useState(null);
     const [rows, setRows] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getProducts();
@@ -16,10 +18,13 @@ export const Products = () => {
 
     const getProducts = async () => {
         try {
+            setLoading(true);
             const products = await ProductService.getAllProducts();
             setRows(products);
         } catch (err) {
             setErr(err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -43,6 +48,7 @@ export const Products = () => {
 
     return (
         <div>
+            {loading && <Spinner />}
             <div>
                 <Button variant="contained" onClick={handleAddProduct}>Add Product</Button>
             </div>
@@ -55,14 +61,14 @@ export const Products = () => {
                     pageSizeOptions={[5, 10]}
                 />
             )}
-            <AutocompleteCust
+            {/* <AutocompleteCust
                 label="Test"
                 initialOptions={options}
                 allowAddNew={true}
                 width={200}
-            />
+            /> */}
 
-            <ModalCust isOpen={openModal} closeEvent={handleCloseModal}/>
+            <ModalCust isOpen={openModal} closeEvent={handleCloseModal} />
         </div>
     );
 };

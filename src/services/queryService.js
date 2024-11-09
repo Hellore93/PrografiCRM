@@ -15,10 +15,19 @@ export const ProductService = {
   },
 
   insertProduct: async (record) => {
-    await Supabase
+    const {data, error, status} = await Supabase
       .from('Product')
       .insert([
         record,
       ]);
+
+      console.log(data, error, status);
+  },
+
+  deleteProduct: async (record) => {
+    await supabase
+    .from('Product')
+    .delete()
+    .eq('some_column', 'someValue')
   }
 }
