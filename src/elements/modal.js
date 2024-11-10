@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import { Box, Button, Typography, Modal, Grid2 } from '@mui/material';
 import { TextField } from '@mui/material';
-import { ProductService } from "../services/queryService";
+import { QueryService } from "../services/queryService";
+import { AutocompleteCust } from "./autocomplete";
 
 export const ModalCust = ({ isOpen, closeEvent, fields }) => {
     const [open, setOpen] = useState(isOpen);
     const [object, setObject] = useState({});
+    const [options, setOptions] = useState([]);
 
     useEffect(() => {
         setOpen(isOpen);
+        getCompany();
     }, [isOpen]);
 
     const style = {
@@ -32,7 +32,14 @@ export const ModalCust = ({ isOpen, closeEvent, fields }) => {
     }
 
     const handleAddRecord = async () => {
-        await ProductService.insertProduct(object);
+        await QueryService.insertProduct(object);
+    }
+
+    const getCompany = async () => {
+        const response = await QueryService.getAllProducts('Company Name');
+        const normalizeResponse = response.map(item => { return { item, label: item.Name } });
+        normalizeResponse.push({ label: 'Add new' });
+        setOptions(normalizeResponse);
     }
 
     const handleInputChange = (e) => {
@@ -54,10 +61,25 @@ export const ModalCust = ({ isOpen, closeEvent, fields }) => {
                         New record
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        <TextField id="Name" type="text" onChange={(e) => handleInputChange(e.target)} label="Name" />
-                        <TextField id="Quantity" type="text" onChange={(e) => handleInputChange(e.target)} label="Quantity" />
+                        <Grid2 container spacing={2}>
+                            <Grid2 size={12}>
+                                <AutocompleteCust
+                                    label="Test"
+                                    initialOptions={options}
+                                    allowAddNew={true}
+                                    width={200}
+                                /></Grid2>
+                            <Grid2 size={6}>
+                                <TextField id="Name" type="text" onChange={(e) => handleInputChange(e.target)} label="Name" />
+                            </Grid2>
+                            <Grid2 size={6}>
+                                <TextField id="Quantity" type="text" onChange={(e) => handleInputChange(e.target)} label="Quantity" />
+                            </Grid2>
+                            <Grid2 size={12} sx={{ display: "flex", justifyContent: "center" }}>
+                                <Button variant="contained" onClick={handleAddRecord}>Add Record</Button>
+                            </Grid2>
+                        </Grid2>
                     </Typography>
-                    <Button variant="contained" onClick={handleAddRecord}>Add Record</Button>
                 </Box>
             </Modal>
         </div>

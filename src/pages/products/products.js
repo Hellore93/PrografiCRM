@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ProductService } from "../../services/queryService";
-import { AutocompleteCust } from "../../elements/autocomplete";
+import { QueryService } from "../../services/queryService";
 import { Datatable } from "../../elements/datatable";
 import { Button } from '@mui/material';
 import { ModalCust } from "../../elements/modal";
@@ -22,7 +21,7 @@ export const Products = () => {
     const getProducts = async () => {
         try {
             setLoading(true);
-            const products = await ProductService.getAllProducts();
+            const products = await QueryService.getAllProducts('Product');
             setRows(products);
         } catch (err) {
             setErr(err);
@@ -53,8 +52,6 @@ export const Products = () => {
         },
     ]
 
-    const options = ['test 1', 'test 2'];
-
     const paginationModel = { page: 0, pageSize: 5 };
 
     const handleAddProduct = () => {
@@ -67,7 +64,7 @@ export const Products = () => {
 
     const handleDelete = (row) => {
         console.log(row);
-        ProductService.deleteProduct(row);
+        QueryService.deleteProduct(row);
         getProducts();
     }
 
@@ -86,12 +83,6 @@ export const Products = () => {
                     pageSizeOptions={[5, 10]}
                 />
             )}
-            {/* <AutocompleteCust
-                label="Test"
-                initialOptions={options}
-                allowAddNew={true}
-                width={200}
-            /> */}
 
             <ModalCust isOpen={openModal} closeEvent={handleCloseModal} />
         </div>

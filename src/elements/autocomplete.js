@@ -9,7 +9,6 @@ export const AutocompleteCust = ({ label, initialOptions, width }) => {
 
     useEffect(() => {
         setOptions(initialOptions);
-        console.log(options);
     }, [initialOptions]);
 
     return (

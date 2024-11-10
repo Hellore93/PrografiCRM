@@ -1,10 +1,10 @@
 import { Supabase } from "./credentialBase";
 
-export const ProductService = {
+export const QueryService = {
 
-  getAllProducts: async () => {
+  getAllProducts: async (objectName) => {
     const { data, error } = await Supabase
-      .from('Product')
+      .from(objectName)
       .select('*');
 
     if (error) {
