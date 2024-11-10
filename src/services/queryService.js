@@ -14,14 +14,24 @@ export const QueryService = {
     return data;
   },
 
-  insertProduct: async (record) => {
+  insertRecord: async (record, objectName) => {
     const { data, error, status } = await Supabase
-      .from('Product')
+      .from(objectName)
       .insert([
         record,
-      ]);
+      ])
+      .select();
 
-    console.log(data, error, status);
+    return { data };
+  },
+
+  updateRecord: async (record, objectName) => {
+    const { data, error } = await Supabase
+      .from(objectName)
+      .update(record)
+      .select()
+
+    return { data };
   },
 
   deleteProduct: async (record) => {
@@ -29,7 +39,5 @@ export const QueryService = {
       .from('Product')
       .delete()
       .eq('id', record.id);
-
-    console.log(data, error, status);
   }
 }

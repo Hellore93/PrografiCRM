@@ -6,13 +6,18 @@ import { ModalCust } from "../../elements/modal";
 import { Spinner } from "../../elements/spinner";
 
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
+
+import { Fields } from "../../forms/fields";
 
 export const Products = () => {
     const [err, setErr] = useState(null);
     const [rows, setRows] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [form, setForm] = useState();
+    const [primaryObject, setPrimaryObject] = useState({});
 
     useEffect(() => {
         getProducts();
@@ -30,6 +35,11 @@ export const Products = () => {
         }
     };
 
+    const getForm = async (isNew) => {
+        const fields = await Fields.insertProduct(isNew);
+        setForm(fields);
+    }
+
     const columns = [
         { field: 'id', headerName: 'ID', width: 50 },
         { field: 'Name', headerName: 'Name', width: 100 },
@@ -43,48 +53,88 @@ export const Products = () => {
             headerName: 'Actions',
             width: 100,
             renderCell: (params) => (
-                <IconButton onClick={() => handleDelete(params.row)} color="error">
-                    <DeleteIcon />
-                </IconButton>
+                <div>
+                    <IconButton onClick={() => handleEdit(params.row)} color="primary">
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(params.row)} color="error">
+                        <DeleteIcon />
+                    </IconButton>
+                </div>
             ),
             sortable: false,
             filterable: false,
         },
     ]
 
-    const paginationModel = { page: 0, pageSize: 5 };
+    const paginationModel = { page: 0, pageSize: 10 };
 
     const handleAddProduct = () => {
+        getForm(true);
         setOpenModal(true);
     }
 
     const handleCloseModal = () => {
         setOpenModal(false);
+        setPrimaryObject({});
     }
 
-    const handleDelete = (row) => {
-        console.log(row);
-        QueryService.deleteProduct(row);
+    const handleDelete = async (row) => {
+        await QueryService.deleteProduct(row);
         getProducts();
+    }
+
+    const handleEdit = (row) => {
+        getForm(false);
+        setPrimaryObject(row);
+        setOpenModal(true)
+    }
+
+    const handleAddObject = async (obj) => {
+        const result = await QueryService.insertRecord(obj[form?.formId], form.objectName);
+        if (result.data !== null) {
+            setOpenModal(false);
+            getProducts();
+        }
+    }
+
+    const handleGetObject = async (object) => {
+        if (object['Company Id'] === 0) {
+            // const obj = {};
+            // obj[form.formId] = object;
+            // setPrimaryObject(obj);
+            setForm(await Fields.insertNewProductCompany());
+            delete object['Company Id'];
+        } else {
+            setPrimaryObject(object);
+        }
     }
 
     return (
         <div>
             {loading && <Spinner />}
             <div>
-                <Button variant="contained" onClick={handleAddProduct}>Add Product</Button>
+                <Button variant="contained" onClick={handleAddProduct} sx={{ margin: 2 }}>Add Product</Button>
             </div>
             {err == null && rows && (
                 <Datatable
                     rows={rows}
                     columns={columnsWithDelete}
-                    checkboxSelection={true}
+                    checkboxSelection={false}
                     paginationModel={paginationModel}
-                    pageSizeOptions={[5, 10]}
+                    pageSizeOptions={[5, 10, 15]}
                 />
             )}
 
-            <ModalCust isOpen={openModal} closeEvent={handleCloseModal} />
+            <ModalCust
+                formId={form?.formId}
+                isOpen={openModal}
+                closeEvent={handleCloseModal}
+                form={form}
+                sendRecord={(obj) => handleGetObject(obj)}
+                handleSave={(obj) => handleAddObject(obj)}
+                initialRecord={primaryObject}
+            />
         </div>
     );
 };
