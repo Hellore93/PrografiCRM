@@ -16,7 +16,7 @@ export const ModalCust = ({ formId, isOpen, closeEvent, form, sendRecord, handle
     form?.fields.forEach(field => {
       return initialRec[field.id] = initialRecord[field.id];
     });
-    setObject(initialRec);
+    setObject(initialRecord);
   }, [initialRecord])
 
   const style = {
@@ -43,8 +43,9 @@ export const ModalCust = ({ formId, isOpen, closeEvent, form, sendRecord, handle
   }
 
   const handleInputChange = (e) => {
-    object[e.id] = e.value;
-    sendRecord(object);
+    const updatedObject = { ...object, [e.id]: e.value };
+    setObject(updatedObject);
+    sendRecord(updatedObject);
   }
 
   return (
@@ -69,7 +70,7 @@ export const ModalCust = ({ formId, isOpen, closeEvent, form, sendRecord, handle
                       initialOptions={field.options}
                       allowAddNew={field.allowAddNew}
                       width={field.width}
-                      value={object[field.id]}
+                      enteredValue={object[field.id]}
                       onChange={(e) => handleInputChange(e)}
                     />
                   ) : (

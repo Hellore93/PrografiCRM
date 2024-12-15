@@ -29,14 +29,14 @@ export const QueryService = {
     const { data, error } = await Supabase
       .from(objectName)
       .update(record)
+      .eq('id', record.id)
       .select()
-
     return { data };
   },
 
-  deleteProduct: async (record) => {
+  deleteProduct: async (record, objectName) => {
     const { data, error, status } = await Supabase
-      .from('Product')
+      .from(objectName)
       .delete()
       .eq('id', record.id);
   }

@@ -29,7 +29,7 @@ export const Fields = {
                 {
                     id: 'Quantity',
                     label: 'Quantity',
-                    type: 'text',
+                    type: 'number',
                     size: 6,
                 },
             ]

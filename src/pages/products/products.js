@@ -80,7 +80,7 @@ export const Products = () => {
     }
 
     const handleDelete = async (row) => {
-        await QueryService.deleteProduct(row);
+        await QueryService.deleteProduct(row, 'Product');
         getProducts();
     }
 
@@ -91,7 +91,9 @@ export const Products = () => {
     }
 
     const handleAddObject = async (obj) => {
-        const result = await QueryService.insertRecord(obj[form?.formId], form.objectName);
+        const result = obj[form?.formId].id === undefined ?
+            await QueryService.insertRecord(obj[form?.formId], form.objectName) :
+            await QueryService.updateRecord(obj[form?.formId], form.objectName);
         if (result.data !== null) {
             setOpenModal(false);
             getProducts();
